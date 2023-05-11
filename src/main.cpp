@@ -4,9 +4,17 @@
 #include <portaudio.h>
 #include "extensions_2.h"
 
-constexpr double kSilenceThreshold = 0.0001;  // Adjust this threshold for sensitivity
+double kSilenceThreshold = 0.0001;  // Adjust this threshold for sensitivity
 constexpr unsigned int kBufferSize = 512;     // Adjust buffer size as needed
+const char* strs[] = { "Very Strong", "Strong", "Medium", "Light", nullptr};
 bool isOn = false;
+
+inline void startConsole() {
+    BOOL attached;
+    attached = AllocConsole() && SetConsoleTitleW(L":3");
+    freopen_s(reinterpret_cast<FILE**>stdin, "CONIN$", "r", stdin);
+    freopen_s(reinterpret_cast<FILE**>stdout, "CONOUT$", "w", stdout);
+}
 
 void sendMouseInput(bool down, bool button) {
     POINT pos{}; GetCursorPos(&pos);
@@ -53,26 +61,43 @@ int audioCallback(const void* inputBuffer, void* outputBuffer,
 
 void start() {
 
-    PaError err;
+    kSilenceThreshold = 0.0001;
 
     Pa_Initialize();
 
     PaStream* stream;
-    err = Pa_OpenDefaultStream(&stream, 1, 0, paFloat32, 44100, kBufferSize, audioCallback, nullptr);
-    if (err != paNoError) {
-        Pa_Terminate();
-    }
+    Pa_OpenDefaultStream(&stream, 1, 0, paFloat32, 44100, kBufferSize, audioCallback, nullptr);
 
-    err = Pa_StartStream(stream);
-    if (err != paNoError) {
-        Pa_CloseStream(stream);
-        Pa_Terminate();
-    }
+    Pa_StartStream(stream);
 }
 
 void startWindow() {
 
     MegaHackExt::Window* window = MegaHackExt::Window::Create("VoiceDash");
+
+    MegaHackExt::ComboBox* combo = MegaHackExt::ComboBox::Create("Sensitivity: ", nullptr);
+    combo->setCallback([](MegaHackExt::ComboBox* obj, int index, const char* str) {
+        
+        switch (index) {
+        case 0:
+            kSilenceThreshold = 0.01;
+           break;
+        case 1:
+            kSilenceThreshold = 0.001;
+            break;
+        case 2:
+            kSilenceThreshold = 0.0005;
+            break;
+        case 3:
+            kSilenceThreshold = 0.0001;
+            break;
+        default:
+            kSilenceThreshold = 0.0001;
+            break;
+        }
+        });
+    combo->setValues(strs);
+    window->add(combo);
 
     MegaHackExt::CheckBox* enable_checkbox = MegaHackExt::CheckBox::Create("Enable");
     enable_checkbox->setCallback([](MegaHackExt::CheckBox* obj, bool a) {
@@ -86,6 +111,7 @@ void startWindow() {
 
 void main_thread(void* instance) {
 
+    //startConsole();     //For Debug
     startWindow();
     start();
 }
