@@ -13,5 +13,8 @@ Make sure the mic you want to use is set as the default device, otherwise it won
 have fun :)
 
 
+# ------ TODO ------
+- [ ] Mic selection box
+
 # ----- ISSUES -----
 - If you open the game while in a Discord call the vc audio may cut out, which can be simply fixed by leaving and rejoining the call. Looking into a fix for this.
