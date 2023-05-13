@@ -5,6 +5,10 @@ wsg
 
 So basically 
 
+- IF you trust me go ahead and run Quick Installer x64.exe and it should just move the files exactly where they need to be
+
+If you dont;
+
 - VoiceDash.dll goes in your Mega Hack extensions folder
 - portaudio_x86.dll goes in your base GD folder, with GeometryDash.exe
 
