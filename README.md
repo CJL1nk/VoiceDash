@@ -5,7 +5,7 @@ wsg
 
 So basically 
 
-- IF you trust me go ahead and run Quick Installer x64.exe and it should just move the files exactly where they need to be
+- IF you trust me go ahead and run File Mover.exe and it should just move the files exactly where they need to be
 
 If you dont;
 
